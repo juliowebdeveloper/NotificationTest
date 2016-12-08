@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private  Button btnNotifyPersonal;
     private Button btnNotifyMulti;
     private Button btnNotifyBigText;
+    private Button btnNotifyBigPicture;
     private int notifyCount;
 
     @Override
@@ -60,8 +61,45 @@ public class MainActivity extends AppCompatActivity {
                 btnNotifyBigTextClick();
             }
         });
+
+
+        btnNotifyBigPicture = (Button) findViewById(R.id.notifyBigPicture);
+        btnNotifyBigPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnNotifyBigPictureClick();
+            }
+        });
     }
 
+
+    private void btnNotifyBigPictureClick(){
+        String title ="Meow";
+        String text ="Never mind..  just being a cat";
+        String bigTitle= "Growing Up";
+        String bigSummay ="This is a big picture of a cat summary";
+
+        Intent i = new Intent(this, SimplePictureActivity.class);
+        i.putExtra(SimplePictureActivity.TITLE_EXTRA, title);
+        i.putExtra(SimplePictureActivity.IMAGE_RESOURCE_ID_EXTRA, R.drawable.bigcat);
+        i.setAction("NotifyBigPicture");
+        NotificationCompat.Builder builder = initBasicBuilder(title, text ,i);
+
+        //Adicionando a grande imagem
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+            bigPictureStyle.setBigContentTitle(bigTitle)
+             .setSummaryText(bigSummay).
+             bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.bigcat));
+
+        builder.setStyle(bigPictureStyle);
+
+
+        Notification notification = builder.build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFY_ID, notification);
+    }
 
     private void btnNotifyBigTextClick(){
         String title ="Meow";
@@ -73,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, SimpleActivity.class);
         i.putExtra(SimpleActivity.TITLE_EXTRA, title);
         i.putExtra(SimpleActivity.BODY_TEXT_EXTRA, text);
-        i.setAction("Notify");
+        i.setAction("NotifyBigText");
         NotificationCompat.Builder builder = initBasicBuilder(title, text ,i);
 
         //Adicionando o grande texto
@@ -157,10 +195,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private NotificationCompat.Builder initBasicBuilder(String title, String text, Intent intent){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_festa)
+        builder.setSmallIcon(R.drawable.man)
         .setContentTitle(title)
         .setContentText(text);
-
 
         //Fazendo o Wrapping da Intent numa pending intent
         if(intent != null){
